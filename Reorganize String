@@ -1,0 +1,37 @@
+Given a string s, rearrange the characters of s so that any two adjacent characters are not the same.
+Return any possible rearrangement of s or return "" if not possible.
+
+ 
+
+Example 1:
+
+Input: s = "aab"
+Output: "aba"
+*** SOLUTION ***
+
+class Solution:
+    def reorganizeString(self, s: str) -> str:
+        # Initialize a frequency map to count occurrences of each character.
+        freq_map = {}
+        for char in s:
+            freq_map[char] = freq_map.get(char, 0) + 1
+
+        # Sort characters based on their frequencies in descending order.
+        sorted_chars = sorted(freq_map.keys(), key=lambda x: freq_map[x], reverse=True)
+
+        # Check if the most frequent character can dominate more than half of the string length.
+        if freq_map[sorted_chars[0]] > (len(s) + 1) // 2:
+            return ""  # In this case, it's not possible to reorganize the string.
+
+        # Initialize a result array to store the reorganized string.
+        res = [None] * len(s)
+
+        i = 0  # Initialize an index for placing characters in the result array.
+        for char in sorted_chars:
+            for _ in range(freq_map[char]):
+                if i >= len(s):
+                    i = 1  # If we've reached the end of the result array, wrap around to index 1.
+                res[i] = char  # Place the character in the result array at index i.
+                i += 2  # Move two steps to the right for the next placement.
+
+        return "".join(res)  # Convert the result array to a string and return.
